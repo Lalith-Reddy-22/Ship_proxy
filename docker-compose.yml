@@ -1,0 +1,23 @@
+version: '3.8'
+services:
+  offshore-proxy-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.server
+    ports:
+      - "9000:9000"
+    container_name: offshore-server
+    restart: unless-stopped
+
+  ship-proxy-client:
+    build:
+      context: .
+      dockerfile: Dockerfile.client
+    ports:
+      - "8080:8080"
+    container_name: ship-client
+    environment:
+      - OFFSHORE_HOST=offshore-proxy-server
+    depends_on:
+      - offshore-proxy-server
+    restart: unless-stopped
